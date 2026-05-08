@@ -1,0 +1,195 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - quanlytaikhaon</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html, body { height: 100%; background: #000; color: #fff; }
+
+        body {
+            font-family: 'Readex Pro', system-ui, -apple-system, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* ── NAVBAR ── */
+        .site-nav {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            padding: 1.5rem 2.5rem;
+        }
+
+        .nav-pill {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(23, 23, 23, 0.92);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: 9999px;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .nav-pill-brand {
+            padding: 0.65rem 1.5rem 0.65rem 1rem;
+        }
+
+        .nav-logo {
+            height: 20px; width: 20px;
+        }
+
+        .nav-brand-text {
+            color: #fff;
+            font-size: 0.875rem;
+            font-weight: 400;
+            letter-spacing: -0.02em;
+            text-decoration: none;
+        }
+
+        .nav-pill-links {
+            padding: 0.4rem 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .nav-pill-links a {
+            color: rgba(255,255,255,0.65);
+            font-size: 0.875rem;
+            font-weight: 400;
+            text-decoration: none;
+            padding: 0.45rem 1.1rem;
+            border-radius: 9999px;
+            transition: color 0.2s, background 0.2s;
+            white-space: nowrap;
+        }
+
+        .nav-pill-links a:hover {
+            color: #fff;
+            background: rgba(255,255,255,0.07);
+        }
+
+        .nav-pill-links a.active {
+            color: #fff;
+        }
+
+        .nav-btn-start {
+            background: #fff;
+            color: #000;
+            font-size: 0.875rem;
+            font-weight: 400;
+            font-family: inherit;
+            border: none;
+            border-radius: 9999px;
+            padding: 0.7rem 1.5rem;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background 0.2s;
+            white-space: nowrap;
+        }
+
+        .nav-btn-start:hover { background: #e5e5e5; color: #000; }
+
+        @@media (max-width: 768px) {
+            .site-nav { padding: 1rem 1.25rem; }
+            .nav-pill-links { display: none !important; }
+        }
+
+        /* ── PAGE WRAPPER ── */
+        .page-content {
+            min-height: 100vh;
+            background: #000;
+        }
+
+        /* ── FOOTER ── */
+        .site-footer {
+            background: #000;
+            border-top: 1px solid rgba(255,255,255,0.08);
+            padding: 1.5rem 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .site-footer a {
+            color: rgba(255,255,255,0.45);
+            font-size: 0.8rem;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .site-footer a:hover { color: #fff; }
+
+        .site-footer span {
+            color: rgba(255,255,255,0.3);
+            font-size: 0.8rem;
+        }
+    </style>
+    @await RenderSectionAsync("Styles", required: false)
+</head>
+<body>
+
+    <nav class="site-nav">
+        <!-- Logo pill -->
+        <div class="nav-pill nav-pill-brand d-flex align-items-center gap-2">
+            <svg class="nav-logo" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M128 192L128 256L64.5 256L32 223L0 192L0 128L64 128Z
+                         M256 192L256 256L192.5 256L160 223L128 192L128 128L192 128Z
+                         M128 64L128 128L64.5 128L32 95L0 64L0 0L64 0Z
+                         M256 64L256 128L192.5 128L160 95L128 64L128 0L192 0Z" fill="#ffffff"/>
+            </svg>
+            <a href="/" class="nav-brand-text">quanlytaikhaon</a>
+        </div>
+
+        <!-- Center links pill -->
+        <div class="nav-pill nav-pill-links">
+            <a asp-controller="Home" asp-action="Index">trang chủ</a>
+            <a asp-controller="TaiKhoan" asp-action="Dashboard">quản trị</a>
+            <a asp-controller="Home" asp-action="Privacy">bảo mật</a>
+            <a href="#">hỗ trợ</a>
+        </div>
+
+        <!-- CTA -->
+        @{
+            var layoutRole = Context.Session.GetString("UserRole");
+        }
+        @if (layoutRole != null)
+        {
+            <a asp-controller="TaiKhoan" asp-action="Logout" class="nav-btn-start">đăng xuất</a>
+        }
+        else
+        {
+            <a asp-controller="TaiKhoan" asp-action="Login" class="nav-btn-start">đăng nhập</a>
+        }
+    </nav>
+
+    <div class="page-content">
+        @RenderBody()
+    </div>
+
+    <footer class="site-footer">
+        <span>&copy; 2026 quanlytaikhaon</span>
+        <a asp-controller="Home" asp-action="Privacy">chính sách bảo mật</a>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

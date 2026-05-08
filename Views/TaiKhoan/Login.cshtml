@@ -1,0 +1,234 @@
+@model quanlytaikhaon.Models.LoginViewModel
+
+@{
+    ViewData["Title"] = "Đăng nhập";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+<style>
+    .auth-page {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+        background: #000;
+        padding: 6rem 1rem 2rem;
+    }
+
+    /* Ambient glow */
+    .auth-glow {
+        position: absolute;
+        width: 600px; height: 600px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(255,255,255,0.04) 0%, transparent 70%);
+        top: 50%; left: 50%;
+        transform: translate(-50%, -50%);
+        pointer-events: none;
+    }
+
+    /* Grid texture */
+    .auth-grid {
+        position: absolute;
+        inset: 0;
+        background-image:
+            linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+        background-size: 48px 48px;
+        pointer-events: none;
+    }
+
+    /* Card */
+    .auth-card {
+        position: relative;
+        z-index: 2;
+        width: 100%;
+        max-width: 420px;
+        background: rgba(10,10,10,0.85);
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 24px;
+        padding: 2.5rem 2.25rem 2rem;
+        backdrop-filter: blur(24px);
+        -webkit-backdrop-filter: blur(24px);
+        box-shadow: 0 0 60px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.04) inset;
+        opacity: 0;
+        transform: translateY(24px);
+        animation: cardIn 0.8s cubic-bezier(.22,1,.36,1) 0.1s forwards;
+    }
+
+    @@keyframes cardIn {
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .auth-eyebrow {
+        font-size: 0.7rem;
+        font-weight: 500;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: rgba(255,255,255,0.35);
+        margin-bottom: 0.5rem;
+    }
+
+    .auth-title {
+        font-size: 2rem;
+        font-weight: 600;
+        letter-spacing: -0.04em;
+        line-height: 1;
+        color: #fff;
+        margin-bottom: 0.5rem;
+    }
+
+    .auth-sub {
+        font-size: 0.82rem;
+        color: rgba(255,255,255,0.4);
+        margin-bottom: 2rem;
+    }
+
+    /* Divider */
+    .auth-divider {
+        height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+        margin-bottom: 2rem;
+    }
+
+    /* Form fields */
+    .auth-field {
+        margin-bottom: 1.1rem;
+    }
+
+    .auth-label {
+        display: block;
+        font-size: 0.78rem;
+        font-weight: 500;
+        color: rgba(255,255,255,0.5);
+        text-transform: lowercase;
+        letter-spacing: 0.02em;
+        margin-bottom: 0.4rem;
+    }
+
+    .auth-input {
+        width: 100%;
+        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 12px;
+        padding: 0.7rem 1rem;
+        color: #fff;
+        font-family: inherit;
+        font-size: 0.9rem;
+        outline: none;
+        transition: border-color 0.2s, background 0.2s;
+    }
+
+    .auth-input::placeholder { color: rgba(255,255,255,0.2); }
+    .auth-input:focus {
+        border-color: rgba(255,255,255,0.3);
+        background: rgba(255,255,255,0.08);
+    }
+
+    .auth-error {
+        font-size: 0.75rem;
+        color: #ff6b6b;
+        margin-top: 0.3rem;
+        display: block;
+    }
+
+    .auth-validation-summary {
+        background: rgba(255,80,80,0.1);
+        border: 1px solid rgba(255,80,80,0.25);
+        border-radius: 10px;
+        padding: 0.75rem 1rem;
+        margin-bottom: 1.25rem;
+        font-size: 0.82rem;
+        color: #ff8080;
+    }
+
+    /* Submit button */
+    .auth-btn {
+        width: 100%;
+        background: #fff;
+        color: #000;
+        font-family: inherit;
+        font-size: 0.9rem;
+        font-weight: 500;
+        border: none;
+        border-radius: 12px;
+        padding: 0.8rem;
+        cursor: pointer;
+        margin-top: 0.5rem;
+        transition: background 0.2s, transform 0.1s;
+        letter-spacing: -0.01em;
+    }
+
+    .auth-btn:hover { background: #e8e8e8; }
+    .auth-btn:active { transform: scale(0.99); }
+
+    /* Footer link */
+    .auth-footer {
+        text-align: center;
+        margin-top: 1.5rem;
+        font-size: 0.82rem;
+        color: rgba(255,255,255,0.35);
+    }
+
+    .auth-footer a {
+        color: rgba(255,255,255,0.75);
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.2s;
+    }
+
+    .auth-footer a:hover { color: #fff; }
+
+    /* Decorative corner */
+    .auth-corner {
+        position: absolute;
+        top: -1px; right: 2rem;
+        width: 60px; height: 3px;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+        border-radius: 9999px;
+    }
+</style>
+}
+
+<div class="auth-page">
+    <div class="auth-grid"></div>
+    <div class="auth-glow"></div>
+
+    <div class="auth-card">
+        <div class="auth-corner"></div>
+
+        <p class="auth-eyebrow">quản lý tài khoản</p>
+        <h1 class="auth-title">đăng nhập</h1>
+        <p class="auth-sub">chào mừng trở lại — hãy tiếp tục hành trình của bạn</p>
+
+        <div class="auth-divider"></div>
+
+        <form asp-action="Login" method="post" novalidate>
+            <div asp-validation-summary="ModelOnly" class="auth-validation-summary"></div>
+
+            <div class="auth-field">
+                <label asp-for="Username" class="auth-label">tên đăng nhập</label>
+                <input asp-for="Username" class="auth-input" placeholder="nhập tên đăng nhập..." autocomplete="username" />
+                <span asp-validation-for="Username" class="auth-error"></span>
+            </div>
+
+            <div class="auth-field">
+                <label asp-for="Password" class="auth-label">mật khẩu</label>
+                <input asp-for="Password" class="auth-input" placeholder="••••••••" autocomplete="current-password" />
+                <span asp-validation-for="Password" class="auth-error"></span>
+            </div>
+
+            <button type="submit" class="auth-btn">đăng nhập →</button>
+        </form>
+
+        <p class="auth-footer">
+            chưa có tài khoản? <a asp-action="Register">đăng ký ngay</a>
+        </p>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
